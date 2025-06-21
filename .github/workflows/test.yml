@@ -15,11 +15,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Foundry (via script)
+      - name: Install Foundry
         run: |
           curl -L https://foundry.paradigm.xyz | bash
           export PATH="$HOME/.foundry/bin:$PATH"
-          foundryup
+          $HOME/.foundry/bin/foundryup
+
 
       - name: Run Forge Tests
         run: |
