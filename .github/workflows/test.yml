@@ -1,3 +1,4 @@
+# .github/workflows/ci.yml
 name: Run Foundry Tests
 
 on:
@@ -11,13 +12,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Foundry
-        uses: foundry-rs/setup-foundry@v1
-        with:
-          version: latest
+      - name: Install Foundry (via script)
+        run: |
+          curl -L https://foundry.paradigm.xyz | bash
+          export PATH="$HOME/.foundry/bin:$PATH"
+          foundryup
 
-      - name: Run Tests
-        run: forge test -vvv
+      - name: Run Forge Tests
+        run: |
+          export PATH="$HOME/.foundry/bin:$PATH"
+          forge test -vvv
