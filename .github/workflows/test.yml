@@ -1,4 +1,3 @@
-# .github/workflows/ci.yml
 name: Run Foundry Tests
 
 on:
@@ -15,14 +14,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Foundry
-        run: |
-          curl -L https://foundry.paradigm.xyz | bash
-          export PATH="$HOME/.foundry/bin:$PATH"
-          $HOME/.foundry/bin/foundryup
+      - name: Setup Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
 
-
-      - name: Run Forge Tests
+      - name: Install Foundry CLI
         run: |
-          export PATH="$HOME/.foundry/bin:$PATH"
-          forge test -vvv
+          cargo install --locked foundry-cli
+        # Ensure ~/.cargo/bin is on PATH
+      - name: Add Cargo bin to PATH
+        run: echo "${HOME}/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Run Forge tests
+        run: forge test -vvv
